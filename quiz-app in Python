@@ -1,1 +1,42 @@
+#interactive quiz game using python
+import random
 
+quiz_data = [
+    {
+     "question": "What is the name of our home galaxy?",
+     "options": ["A. Andromeda Galaxy", "B. Milky Way Galaxy", "C. Triangulum Galaxy", "D. Sombrero Galaxy"],
+     "answer": "B"
+    },
+    {
+     "question": "",
+     "options": ["A. ", "B. ", "C. ", "D. "],
+     "answer": "A"
+    },
+    {
+    }
+]
+
+#displaying content
+def ask_question(question_data):
+    print(question_data["question"])
+    for option in question_data["options"]:
+        print(option)
+    user_answer = input("Enter your answer (A,B,C,D): ").upper()
+    if user_answer == question_data["answer"]:
+        return True
+    else:
+        return False
+    
+#main body
+if __name__=="__main__":
+    score=0
+    #random.shuffle(quiz_data)
+    for i in range(1,6):
+        print(f'Question {i} of 5')
+        if ask_question(quiz_data[i]):
+            print("Correct!\n")
+            score += 1
+        else:
+            print(f"Wrong! The correct answer is {quiz_data[i]['answer']}.\n")
+
+print(f"You scored {score}/5.")
