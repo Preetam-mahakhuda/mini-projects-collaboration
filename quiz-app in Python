@@ -1,42 +1,137 @@
-#interactive quiz game using python
+import tkinter as tk
+from tkinter import messagebox
 import random
 
+# -------------------------
+# Your quiz data
+# -------------------------
 quiz_data = [
     {
-     "question": "What is the name of our home galaxy?",
-     "options": ["A. Andromeda Galaxy", "B. Milky Way Galaxy", "C. Triangulum Galaxy", "D. Sombrero Galaxy"],
-     "answer": "B"
+        "question": "What is the name of our home galaxy?",
+        "options": ["A. Andromeda Galaxy", "B. Milky Way Galaxy", "C. Triangulum Galaxy", "D. Sombrero Galaxy"],
+        "answer": "B"
     },
     {
-     "question": "",
-     "options": ["A. ", "B. ", "C. ", "D. "],
-     "answer": "A"
-    },
-    {
+        "question": "If you throw a red stone into the blue sea, what will it become?",
+        "options": ["A. Purple", "B. Wet", "C. Blue", "D. Sinking"],
+        "answer": "B"
     }
 ]
 
-#displaying content
-def ask_question(question_data):
-    print(question_data["question"])
-    for option in question_data["options"]:
-        print(option)
-    user_answer = input("Enter your answer (A,B,C,D): ").upper()
-    if user_answer == question_data["answer"]:
-        return True
-    else:
-        return False
-    
-#main body
-if __name__=="__main__":
-    score=0
-    #random.shuffle(quiz_data)
-    for i in range(1,6):
-        print(f'Question {i} of 5')
-        if ask_question(quiz_data[i]):
-            print("Correct!\n")
-            score += 1
-        else:
-            print(f"Wrong! The correct answer is {quiz_data[i]['answer']}.\n")
+class QuizApp:
+    def __init__(self, master, quiz_data, num_questions=None):
+        self.master = master
+        self.master.title("Quiz App")
+        self.master.geometry("640x420")
 
-print(f"You scored {score}/5.")
+        # 🎨 Set background color for the whole window
+        self.master.configure(bg="#e6f2ff")  # Light blue background
+
+        self.quiz_data = quiz_data.copy()
+        random.shuffle(self.quiz_data)
+        self.num_questions = min(len(self.quiz_data), num_questions) if num_questions else len(self.quiz_data)
+        self.current = 0
+        self.score = 0
+        self.selected = tk.StringVar(value="")
+
+        # Question Label
+        self.question_label = tk.Label(
+            master, text="", font=("Arial", 14), wraplength=600, justify="left",
+            bg="#e6f2ff", fg="#003366"  # Dark blue text
+        )
+        self.question_label.pack(pady=(20, 10))
+
+        # Radio Button Frame
+        self.radio_frame = tk.Frame(master, bg="#e6f2ff")  # Match background
+        self.radio_frame.pack(pady=(0, 10), anchor="w")
+
+        # Radio Buttons
+        self.radio_buttons = []
+        for val in ("A", "B", "C", "D"):
+            rb = tk.Radiobutton(
+                self.radio_frame, text="", variable=self.selected, value=val,
+                font=("Arial", 12), anchor="w", width=70, justify="left",
+                bg="#e6f2ff", fg="#000000", selectcolor="#cce6ff",
+                activebackground="#e6f2ff"
+            )
+            rb.pack(anchor="w", pady=2)
+            self.radio_buttons.append(rb)
+
+        # Feedback Label
+        self.feedback_label = tk.Label(master, text="", font=("Arial", 12), bg="#e6f2ff")
+        self.feedback_label.pack(pady=8)
+
+        # Buttons Frame
+        self.button_frame = tk.Frame(master, bg="#e6f2ff")
+        self.button_frame.pack(pady=8)
+
+        # Submit Button
+        self.submit_btn = tk.Button(
+            self.button_frame, text="Submit", command=self.submit_answer, width=12,
+            font=("Arial", 12, "bold"), bg="#ff9933", fg="white",
+            activebackground="#ffcc66", activeforeground="black", relief="raised", bd=3
+        )
+        self.submit_btn.grid(row=0, column=0, padx=8)
+
+        # Next Button
+        self.next_btn = tk.Button(
+            self.button_frame, text="Next", command=self.next_question, state="disabled", width=12,
+            font=("Arial", 12, "bold"), bg="#009999", fg="white",
+            activebackground="#33cccc", activeforeground="black", relief="raised", bd=3
+        )
+        self.next_btn.grid(row=0, column=1, padx=8)
+
+        # Hover Effects
+        self.submit_btn.bind("<Enter>", lambda e: e.widget.config(bg="#ffcc66"))
+        self.submit_btn.bind("<Leave>", lambda e: e.widget.config(bg="#ff9933"))
+        self.next_btn.bind("<Enter>", lambda e: e.widget.config(bg="#33cccc"))
+        self.next_btn.bind("<Leave>", lambda e: e.widget.config(bg="#009999"))
+
+        # Score Label
+        self.score_label = tk.Label(
+            master, text=f"Score: {self.score}/{self.num_questions}",
+            font=("Arial", 12), bg="#e6f2ff"
+        )
+        self.score_label.pack(pady=(6, 0))
+
+        self.load_question()
+
+    def load_question(self):
+        self.selected.set("")
+        self.feedback_label.config(text="")
+        q = self.quiz_data[self.current]
+        self.question_label.config(text=f"Q{self.current + 1}: {q['question']}")
+        for i, opt_text in enumerate(q["options"]):
+            self.radio_buttons[i].config(text=opt_text)
+        self.submit_btn.config(state="normal")
+        self.next_btn.config(state="disabled")
+
+    def submit_answer(self):
+        chosen = self.selected.get()
+        if not chosen:
+            messagebox.showwarning("No answer", "Please select an option before submitting.")
+            return
+        correct = self.quiz_data[self.current]['answer']
+        if chosen == correct:
+            self.score += 1
+            self.feedback_label.config(text="✅ Correct!", fg="green")
+        else:
+            correct_idx = ord(correct) - ord('A')
+            correct_text = self.quiz_data[self.current]['options'][correct_idx]
+            self.feedback_label.config(text=f"❌ Wrong! Correct: {correct} — {correct_text}", fg="red")
+        self.score_label.config(text=f"Score: {self.score}/{self.num_questions}")
+        self.submit_btn.config(state="disabled")
+        self.next_btn.config(state="normal")
+
+    def next_question(self):
+        self.current += 1
+        if self.current >= self.num_questions:
+            messagebox.showinfo("Quiz Completed", f"You scored {self.score}/{self.num_questions}")
+            self.master.destroy()
+            return
+        self.load_question()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = QuizApp(root, quiz_data, num_questions=2)
+    root.mainloop()
