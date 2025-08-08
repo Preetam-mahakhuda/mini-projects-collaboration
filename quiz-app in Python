@@ -1,6 +1,8 @@
-#interactive quiz game using python
+import tkinter as tk
+from tkinter import messagebox
 import random
 
+# Quiz data
 quiz_data = [
     {
         "question": "What is the name of our home galaxy?",
@@ -104,28 +106,56 @@ quiz_data = [
     }
 ]
 
+# Shuffle questions so order changes each time
+random.shuffle(quiz_data)
 
-#displaying content
-def ask_question(question_data):
-    print(question_data["question"])
-    for option in question_data["options"]:
-        print(option)
-    user_answer = input("Enter your answer (A,B,C,D): ").upper()
-    if user_answer == question_data["answer"]:
-        return True
-    else:
-        return False
+# Variables to track progress
+current_question = 0
+score = 0
+
+# Function to load the current question
+def load_question():
+    global current_question
+    question_label.config(text=quiz_data[current_question]["question"])
     
-#main body
-if __name__=="__main__":
-    score=0
-    #random.shuffle(quiz_data)
-    for i in range(1,6):
-        print(f'Question {i} of 5')
-        if ask_question(quiz_data[i]):
-            print("Correct!\n")
-            score += 1
-        else:
-            print(f"Wrong! The correct answer is {quiz_data[i]['answer']}.\n")
+    # Set options text for each button
+    for i, option in enumerate(quiz_data[current_question]["options"]):
+        option_buttons[i].config(text=option)
 
-print(f"You scored {score}/5.")
+# Function to check the answer
+def check_answer(selected_option):
+    global current_question, score
+    correct_answer = quiz_data[current_question]["answer"]
+    
+    if selected_option.startswith(correct_answer):  # Matching first letter e.g., "B"
+        score += 1
+    
+    current_question += 1
+    
+    if current_question < len(quiz_data):
+        load_question()
+    else:
+        messagebox.showinfo("Quiz Completed", f"You scored {score}/{len(quiz_data)}")
+        root.destroy()
+
+# ----------------- GUI SETUP -----------------
+root = tk.Tk()  # Creates the main application window
+root.title("Quiz App")  # Sets the window title
+root.geometry("500x300")  # Sets window size
+
+# Question Label
+question_label = tk.Label(root, text="", font=("Arial", 14), wraplength=450, justify="center")
+question_label.pack(pady=20)
+
+# Option Buttons
+option_buttons = []
+for i in range(4):
+    btn = tk.Button(root, text="", font=("Arial", 12), width=30, 
+                    command=lambda i=i: check_answer(option_buttons[i]["text"]))
+    btn.pack(pady=5)
+    option_buttons.append(btn)
+
+# Load the first question
+load_question()
+
+root.mainloop()  # Runs the Tkinter event loop
