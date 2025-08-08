@@ -3,18 +3,107 @@ import random
 
 quiz_data = [
     {
-     "question": "What is the name of our home galaxy?",
-     "options": ["A. Andromeda Galaxy", "B. Milky Way Galaxy", "C. Triangulum Galaxy", "D. Sombrero Galaxy"],
-     "answer": "B"
+        "question": "What is the name of our home galaxy?",
+        "options": ["A. Andromeda Galaxy", "B. Milky Way Galaxy", "C. Triangulum Galaxy", "D. Sombrero Galaxy"],
+        "answer": "B"
     },
     {
-     "question": "",
-     "options": ["A. ", "B. ", "C. ", "D. "],
-     "answer": "A"
+        "question": "Which planet is known as the 'Red Planet'?",
+        "options": ["A. Venus", "B. Mars", "C. Jupiter", "D. Saturn"],
+        "answer": "B"
     },
     {
+        "question": "If you have 5 apples and you take away 2, how many do you have?",
+        "options": ["A. 2", "B. 3", "C. 5", "D. None"],
+        "answer": "A"
+    },
+    {
+        "question": "Which is the fastest land animal?",
+        "options": ["A. Lion", "B. Cheetah", "C. Horse", "D. Leopard"],
+        "answer": "B"
+    },
+    {
+        "question": "Which gas do humans primarily exhale?",
+        "options": ["A. Oxygen", "B. Carbon Dioxide", "C. Nitrogen", "D. Helium"],
+        "answer": "B"
+    },
+    {
+        "question": "Which country invented tea?",
+        "options": ["A. India", "B. England", "C. China", "D. Japan"],
+        "answer": "C"
+    },
+    {
+        "question": "Which is the smallest prime number?",
+        "options": ["A. 0", "B. 1", "C. 2", "D. 3"],
+        "answer": "C"
+    },
+    {
+        "question": "What is the capital of Australia?",
+        "options": ["A. Sydney", "B. Canberra", "C. Melbourne", "D. Perth"],
+        "answer": "B"
+    },
+    {
+        "question": "If you mix red and white paint, what color do you get?",
+        "options": ["A. Pink", "B. Purple", "C. Orange", "D. Brown"],
+        "answer": "A"
+    },
+    {
+        "question": "How many continents are there on Earth?",
+        "options": ["A. 5", "B. 6", "C. 7", "D. 8"],
+        "answer": "C"
+    },
+    {
+        "question": "Which is the largest mammal in the world?",
+        "options": ["A. Elephant", "B. Blue Whale", "C. Giraffe", "D. Orca"],
+        "answer": "B"
+    },
+    {
+        "question": "Which animal is known to sleep standing up?",
+        "options": ["A. Dog", "B. Horse", "C. Snake", "D. Cat"],
+        "answer": "B"
+    },
+    {
+        "question": "If a plane crashes on the border of the US and Canada, where do they bury the survivors?",
+        "options": ["A. US", "B. Canada", "C. Both", "D. Nowhere"],
+        "answer": "D"
+    },
+    {
+        "question": "Which is the only food that never spoils?",
+        "options": ["A. Rice", "B. Honey", "C. Salt", "D. Sugar"],
+        "answer": "B"
+    },
+    {
+        "question": "What is the boiling point of water at sea level in Celsius?",
+        "options": ["A. 50°C", "B. 75°C", "C. 100°C", "D. 150°C"],
+        "answer": "C"
+    },
+    {
+        "question": "What is the chemical symbol for gold?",
+        "options": ["A. Ag", "B. Au", "C. Gd", "D. Go"],
+        "answer": "B"
+    },
+    {
+        "question": "Which bird can mimic human speech?",
+        "options": ["A. Parrot", "B. Crow", "C. Owl", "D. Eagle"],
+        "answer": "A"
+    },
+    {
+        "question": "What is the currency of Japan?",
+        "options": ["A. Yen", "B. Won", "C. Yuan", "D. Dollar"],
+        "answer": "A"
+    },
+    {
+        "question": "Which number is considered unlucky in many cultures?",
+        "options": ["A. 3", "B. 7", "C. 13", "D. 21"],
+        "answer": "C"
+    },
+    {
+        "question": "If you throw a red stone into the blue sea, what will it become?",
+        "options": ["A. Purple", "B. Wet", "C. Blue", "D. Sinking"],
+        "answer": "B"
     }
 ]
+
 
 #displaying content
 def ask_question(question_data):
