@@ -2,102 +2,14 @@ import tkinter as tk
 from tkinter import messagebox
 import random
 
-# Quiz data
+# -------------------------
+# Your quiz data
+# -------------------------
 quiz_data = [
     {
         "question": "What is the name of our home galaxy?",
         "options": ["A. Andromeda Galaxy", "B. Milky Way Galaxy", "C. Triangulum Galaxy", "D. Sombrero Galaxy"],
         "answer": "B"
-    },
-    {
-        "question": "Which planet is known as the 'Red Planet'?",
-        "options": ["A. Venus", "B. Mars", "C. Jupiter", "D. Saturn"],
-        "answer": "B"
-    },
-    {
-        "question": "If you have 5 apples and you take away 2, how many do you have?",
-        "options": ["A. 2", "B. 3", "C. 5", "D. None"],
-        "answer": "A"
-    },
-    {
-        "question": "Which is the fastest land animal?",
-        "options": ["A. Lion", "B. Cheetah", "C. Horse", "D. Leopard"],
-        "answer": "B"
-    },
-    {
-        "question": "Which gas do humans primarily exhale?",
-        "options": ["A. Oxygen", "B. Carbon Dioxide", "C. Nitrogen", "D. Helium"],
-        "answer": "B"
-    },
-    {
-        "question": "Which country invented tea?",
-        "options": ["A. India", "B. England", "C. China", "D. Japan"],
-        "answer": "C"
-    },
-    {
-        "question": "Which is the smallest prime number?",
-        "options": ["A. 0", "B. 1", "C. 2", "D. 3"],
-        "answer": "C"
-    },
-    {
-        "question": "What is the capital of Australia?",
-        "options": ["A. Sydney", "B. Canberra", "C. Melbourne", "D. Perth"],
-        "answer": "B"
-    },
-    {
-        "question": "If you mix red and white paint, what color do you get?",
-        "options": ["A. Pink", "B. Purple", "C. Orange", "D. Brown"],
-        "answer": "A"
-    },
-    {
-        "question": "How many continents are there on Earth?",
-        "options": ["A. 5", "B. 6", "C. 7", "D. 8"],
-        "answer": "C"
-    },
-    {
-        "question": "Which is the largest mammal in the world?",
-        "options": ["A. Elephant", "B. Blue Whale", "C. Giraffe", "D. Orca"],
-        "answer": "B"
-    },
-    {
-        "question": "Which animal is known to sleep standing up?",
-        "options": ["A. Dog", "B. Horse", "C. Snake", "D. Cat"],
-        "answer": "B"
-    },
-    {
-        "question": "If a plane crashes on the border of the US and Canada, where do they bury the survivors?",
-        "options": ["A. US", "B. Canada", "C. Both", "D. Nowhere"],
-        "answer": "D"
-    },
-    {
-        "question": "Which is the only food that never spoils?",
-        "options": ["A. Rice", "B. Honey", "C. Salt", "D. Sugar"],
-        "answer": "B"
-    },
-    {
-        "question": "What is the boiling point of water at sea level in Celsius?",
-        "options": ["A. 50°C", "B. 75°C", "C. 100°C", "D. 150°C"],
-        "answer": "C"
-    },
-    {
-        "question": "What is the chemical symbol for gold?",
-        "options": ["A. Ag", "B. Au", "C. Gd", "D. Go"],
-        "answer": "B"
-    },
-    {
-        "question": "Which bird can mimic human speech?",
-        "options": ["A. Parrot", "B. Crow", "C. Owl", "D. Eagle"],
-        "answer": "A"
-    },
-    {
-        "question": "What is the currency of Japan?",
-        "options": ["A. Yen", "B. Won", "C. Yuan", "D. Dollar"],
-        "answer": "A"
-    },
-    {
-        "question": "Which number is considered unlucky in many cultures?",
-        "options": ["A. 3", "B. 7", "C. 13", "D. 21"],
-        "answer": "C"
     },
     {
         "question": "If you throw a red stone into the blue sea, what will it become?",
@@ -106,56 +18,120 @@ quiz_data = [
     }
 ]
 
-# Shuffle questions so order changes each time
-random.shuffle(quiz_data)
+class QuizApp:
+    def __init__(self, master, quiz_data, num_questions=None):
+        self.master = master
+        self.master.title("Quiz App")
+        self.master.geometry("640x420")
 
-# Variables to track progress
-current_question = 0
-score = 0
+        # 🎨 Set background color for the whole window
+        self.master.configure(bg="#e6f2ff")  # Light blue background
 
-# Function to load the current question
-def load_question():
-    global current_question
-    question_label.config(text=quiz_data[current_question]["question"])
-    
-    # Set options text for each button
-    for i, option in enumerate(quiz_data[current_question]["options"]):
-        option_buttons[i].config(text=option)
+        self.quiz_data = quiz_data.copy()
+        random.shuffle(self.quiz_data)
+        self.num_questions = min(len(self.quiz_data), num_questions) if num_questions else len(self.quiz_data)
+        self.current = 0
+        self.score = 0
+        self.selected = tk.StringVar(value="")
 
-# Function to check the answer
-def check_answer(selected_option):
-    global current_question, score
-    correct_answer = quiz_data[current_question]["answer"]
-    
-    if selected_option.startswith(correct_answer):  # Matching first letter e.g., "B"
-        score += 1
-    
-    current_question += 1
-    
-    if current_question < len(quiz_data):
-        load_question()
-    else:
-        messagebox.showinfo("Quiz Completed", f"You scored {score}/{len(quiz_data)}")
-        root.destroy()
+        # Question Label
+        self.question_label = tk.Label(
+            master, text="", font=("Arial", 14), wraplength=600, justify="left",
+            bg="#e6f2ff", fg="#003366"  # Dark blue text
+        )
+        self.question_label.pack(pady=(20, 10))
 
-# ----------------- GUI SETUP -----------------
-root = tk.Tk()  # Creates the main application window
-root.title("Quiz App")  # Sets the window title
-root.geometry("500x300")  # Sets window size
+        # Radio Button Frame
+        self.radio_frame = tk.Frame(master, bg="#e6f2ff")  # Match background
+        self.radio_frame.pack(pady=(0, 10), anchor="w")
 
-# Question Label
-question_label = tk.Label(root, text="", font=("Arial", 14), wraplength=450, justify="center")
-question_label.pack(pady=20)
+        # Radio Buttons
+        self.radio_buttons = []
+        for val in ("A", "B", "C", "D"):
+            rb = tk.Radiobutton(
+                self.radio_frame, text="", variable=self.selected, value=val,
+                font=("Arial", 12), anchor="w", width=70, justify="left",
+                bg="#e6f2ff", fg="#000000", selectcolor="#cce6ff",
+                activebackground="#e6f2ff"
+            )
+            rb.pack(anchor="w", pady=2)
+            self.radio_buttons.append(rb)
 
-# Option Buttons
-option_buttons = []
-for i in range(4):
-    btn = tk.Button(root, text="", font=("Arial", 12), width=30, 
-                    command=lambda i=i: check_answer(option_buttons[i]["text"]))
-    btn.pack(pady=5)
-    option_buttons.append(btn)
+        # Feedback Label
+        self.feedback_label = tk.Label(master, text="", font=("Arial", 12), bg="#e6f2ff")
+        self.feedback_label.pack(pady=8)
 
-# Load the first question
-load_question()
+        # Buttons Frame
+        self.button_frame = tk.Frame(master, bg="#e6f2ff")
+        self.button_frame.pack(pady=8)
 
-root.mainloop()  # Runs the Tkinter event loop
+        # Submit Button
+        self.submit_btn = tk.Button(
+            self.button_frame, text="Submit", command=self.submit_answer, width=12,
+            font=("Arial", 12, "bold"), bg="#ff9933", fg="white",
+            activebackground="#ffcc66", activeforeground="black", relief="raised", bd=3
+        )
+        self.submit_btn.grid(row=0, column=0, padx=8)
+
+        # Next Button
+        self.next_btn = tk.Button(
+            self.button_frame, text="Next", command=self.next_question, state="disabled", width=12,
+            font=("Arial", 12, "bold"), bg="#009999", fg="white",
+            activebackground="#33cccc", activeforeground="black", relief="raised", bd=3
+        )
+        self.next_btn.grid(row=0, column=1, padx=8)
+
+        # Hover Effects
+        self.submit_btn.bind("<Enter>", lambda e: e.widget.config(bg="#ffcc66"))
+        self.submit_btn.bind("<Leave>", lambda e: e.widget.config(bg="#ff9933"))
+        self.next_btn.bind("<Enter>", lambda e: e.widget.config(bg="#33cccc"))
+        self.next_btn.bind("<Leave>", lambda e: e.widget.config(bg="#009999"))
+
+        # Score Label
+        self.score_label = tk.Label(
+            master, text=f"Score: {self.score}/{self.num_questions}",
+            font=("Arial", 12), bg="#e6f2ff"
+        )
+        self.score_label.pack(pady=(6, 0))
+
+        self.load_question()
+
+    def load_question(self):
+        self.selected.set("")
+        self.feedback_label.config(text="")
+        q = self.quiz_data[self.current]
+        self.question_label.config(text=f"Q{self.current + 1}: {q['question']}")
+        for i, opt_text in enumerate(q["options"]):
+            self.radio_buttons[i].config(text=opt_text)
+        self.submit_btn.config(state="normal")
+        self.next_btn.config(state="disabled")
+
+    def submit_answer(self):
+        chosen = self.selected.get()
+        if not chosen:
+            messagebox.showwarning("No answer", "Please select an option before submitting.")
+            return
+        correct = self.quiz_data[self.current]['answer']
+        if chosen == correct:
+            self.score += 1
+            self.feedback_label.config(text="✅ Correct!", fg="green")
+        else:
+            correct_idx = ord(correct) - ord('A')
+            correct_text = self.quiz_data[self.current]['options'][correct_idx]
+            self.feedback_label.config(text=f"❌ Wrong! Correct: {correct} — {correct_text}", fg="red")
+        self.score_label.config(text=f"Score: {self.score}/{self.num_questions}")
+        self.submit_btn.config(state="disabled")
+        self.next_btn.config(state="normal")
+
+    def next_question(self):
+        self.current += 1
+        if self.current >= self.num_questions:
+            messagebox.showinfo("Quiz Completed", f"You scored {self.score}/{self.num_questions}")
+            self.master.destroy()
+            return
+        self.load_question()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = QuizApp(root, quiz_data, num_questions=2)
+    root.mainloop()
