@@ -1,1 +1,32 @@
 
+def show_balance():
+pass
+
+def deposite():
+pass
+
+def withdraw():
+pass
+
+balance = 0
+is_running = False
+
+while is_running:
+    print("Banking Programme")
+    print("1.Show balance")
+    print("2.Deposite")
+    print("4.With draw")
+    print("5.Exit")
+    
+choice = input("Enter your choice(1-4): ")
+
+if choice == "1":
+    show_balance()
+elif choice == "2":
+    deposite()
+elif choice == "3":
+    withdraw()
+elif choice == "4":
+    is_running = False
+else:
+    print("This is not a valid function")
