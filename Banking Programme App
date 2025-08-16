@@ -1,9 +1,15 @@
+#Banking Programme App
 
 def show_balance():
-pass
+    print(f"Your balance is: ${balance}")
 
 def deposite():
-pass
+amount = float(input("Enter an amount to be deposited: "))
+    if amount < 0:
+        print("That's not a valid amount")
+        return 0
+    else:
+        return amount
 
 def withdraw():
 pass
